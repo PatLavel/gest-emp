@@ -1,3 +1,8 @@
+<?php session_start(); 
+if ($_SESSION['online'] == false) {
+    header('location: connection.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
