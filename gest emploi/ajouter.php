@@ -13,14 +13,27 @@ if ($_SESSION['online'] == false) {
     <title>ajout</title></head>
 <body>
     <?php 
-
+        function getService(){
         $bdd = mysqli_init();
         mysqli_real_connect($bdd, "localhost", "root", "", "employes");
-        $result = mysqli_query($bdd, "SELECT *  FROM employes WHERE emploi = 'DIRECTEUR' OR emploi = 'president';") or die(mysql_error());
-        $donnees = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        $resultserv = mysqli_query($bdd, "SELECT *  FROM services ;") or die(mysql_error());
-        $donneeserv = mysqli_fetch_all($resultserv, MYSQLI_ASSOC);
-    
+        $result = mysqli_query($bdd, "SELECT *  FROM services ;");
+        // SI c'est nécessaire (CAS DU SELECT)
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_free_result($result);
+        mysqli_close($bdd);
+        return $data;    
+        }
+        function getDirection(){
+        $bdd = mysqli_init();
+        mysqli_real_connect($bdd, "localhost", "root", "", "employes");
+        $result = mysqli_query($bdd, "SELECT *  FROM employes WHERE emploi = 'DIRECTEUR' OR emploi = 'president';");
+        // SI c'est nécessaire (CAS DU SELECT)
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_free_result($result);
+        mysqli_close($bdd);
+        return $data;    
+        }
+        
         if (isset($_GET["check"])) {
             ?> <td>Informations Incorectes</td> <?php }; ?>
 
@@ -42,16 +55,16 @@ if ($_SESSION['online'] == false) {
         <select name="sup">
             <?php
             
-            for ($i = 0;$i<sizeof($donnees);$i++ ){
-                ?><option value="<?php echo $donnees[$i]['noemp']; ?>"><?php echo ($donnees[$i]['nom'].' '.$donnees[$i]['prenom']); ?></option><?php
+            for ($i = 0;$i<sizeof(getDirection());$i++ ){
+                ?><option value="<?php echo getDirection()[$i]['noemp']; ?>"><?php echo (getDirection()[$i]['nom'].' '.getDirection()[$i]['prenom']); ?></option><?php
             }?>
             
         </select>
         <td>Votre service</td>
         <select name="service">
             <?php
-            for ($i = 0;$i<sizeof($donneeserv);$i++ ){
-                ?><option value="<?php echo $donneeserv[$i]['service']; ?>"><?php echo $donneeserv[$i]['service']; ?></option><?php
+            for ($i = 0;$i<sizeof(getService());$i++ ){
+                ?><option value="<?php echo getService()[$i]['service']; ?>"><?php echo getService()[$i]['service']; ?></option><?php
             }?>
             
         </select>
