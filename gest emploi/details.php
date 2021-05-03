@@ -29,26 +29,37 @@ if ($_SESSION['online'] == false) {
 
             
         <?php
-        $id = $_GET["id"];
-        $bdd = mysqli_init();
-        mysqli_real_connect($bdd, "localhost", "root", "", "employes");
-        $result = mysqli_query($bdd, "SELECT *  FROM employes WHERE noemp = $id;") or die(mysql_error());
-        $donnees = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        // $id = $_GET["id"];
+        // $bdd = mysqli_init();
+        // mysqli_real_connect($bdd, "localhost", "root", "", "employes");
+        // $result = mysqli_query($bdd, "SELECT *  FROM employes WHERE noemp = $id;") or die(mysql_error());
+        // $donnees = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        function selectUser(){
+            $id = $_GET["id"];
+            $bdd = mysqli_init();
+            mysqli_real_connect($bdd, "localhost", "root", "", "employes");
+            $result = mysqli_query($bdd, "SELECT *  FROM employes WHERE noemp = $id;");
+            // SI c'est nécessaire (CAS DU SELECT)
+            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            mysqli_free_result($result);
+            mysqli_close($bdd);
+            return $data;    
+            }
         ?>
         <tr>
-        <td><?php echo $donnees[0]['noemp']; ?></td>
-        <td><?php echo $donnees[0]['nom']; ?></td>
-        <td><?php echo $donnees[0]['prenom']; ?></td>
-        <td><?php echo $donnees[0]['emploi']; ?></td>
-        <td><?php echo $donnees[0]['sup']; ?></td>
-        <td><?php echo $donnees[0]['embauche']; ?></td>
-        <td><?php echo $donnees[0]['sal']; ?></td>
-        <td><?php echo $donnees[0]['comm']; ?></td>
-        <td><?php echo $donnees[0]['noserv']; ?></td>
+        <td><?php echo selectUser()[0]['noemp']; ?></td>
+        <td><?php echo selectUser()[0]['nom']; ?></td>
+        <td><?php echo selectUser()[0]['prenom']; ?></td>
+        <td><?php echo selectUser()[0]['emploi']; ?></td>
+        <td><?php echo selectUser()[0]['sup']; ?></td>
+        <td><?php echo selectUser()[0]['embauche']; ?></td>
+        <td><?php echo selectUser()[0]['sal']; ?></td>
+        <td><?php echo selectUser()[0]['comm']; ?></td>
+        <td><?php echo selectUser()[0]['noserv']; ?></td>
         </tr>
         <td><?php echo "<a href='bdd.php'><button class='btn btn-warning'>retour</button></a>"; ?></td>
-        <?php  
-        mysqli_free_result($result); ?>
+        
     </table>
 </body>
 </html>
