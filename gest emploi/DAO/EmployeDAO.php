@@ -1,0 +1,101 @@
+<?php
+include_once("modele/Employe.php");
+class EmployeDAO
+{
+
+    public function getEmployes() 
+    {
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        $bdd = new mysqli("localhost", "root", "", "employes");
+        $stat = $bdd->prepare("SELECT * FROM employes INNER JOIN services ON employes.noserv=services.noserv;");
+        $stat->execute();
+        $result = $stat->get_result();
+        $row = $result->fetch_all(MYSQLI_ASSOC);
+        $tabEmps = [];
+        foreach ($row as $value) {
+            $employes = (new Employe())->setNoemp($value["noemp"])->setNom($value["nom"])->setPrenom($value["prenom"])->setEmploi($value["emploi"])->setSup($value["sup"])->setEmbauche($value["embauche"])->setSal($value["sal"])->setCom($value["comm"])->setNoserv($value["noserv"]);
+            $tabEmps[] = $employes;
+        }
+        $result->free();
+        $bdd->close();
+        return $tabEmps;
+    }
+    public function modification(string $nom, string $prenom, string $poste, int $sup, int $noserv, int $id) 
+    {
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        $bdd = new mysqli("localhost", "root", "", "employes");
+        $stat = $bdd->prepare("UPDATE employes SET nom = ? , prenom = ? , emploi = ?  , sup = ? , noserv = ? WHERE noemp = ? ;");
+        $stat->bind_param("ssssii", $nom, $prenom, $poste, $sup, $noserv, $id);
+        $stat->execute();
+        $bdd->close();
+    }
+
+    public function selectEmp(int $id) : Employe
+    {
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        $bdd = new mysqli("localhost", "root", "", "employes");
+        $stat = $bdd->prepare("SELECT *  FROM employes WHERE noemp = ?;");
+        $stat->bind_param("i", $id);
+        $stat->execute();
+        $result = $stat->get_result();
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+        $employe = (new Employe())->setNoemp($data[0]["noemp"])->setNom($data[0]["nom"])->setPrenom($data[0]["prenom"])->setEmploi($data[0]["emploi"])
+            ->setSup($data[0]["sup"])->setEmbauche($data[0]["embauche"])->setSal($data[0]["sal"])->setCom($data[0]["comm"])->setNoserv($data[0]["noserv"]);
+        $result->free();
+        $bdd->close();
+        return $employe;
+    }
+    public function getDirection()
+    {
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        $bdd = new mysqli("localhost", "root", "", "employes");
+        $stat = $bdd->prepare("SELECT noemp, nom, prenom FROM employes WHERE emploi = 'DIRECTEUR' OR emploi = 'PRESIDENT' ;");
+        //$stat->bind_param("ss",'DIRECTEUR', 'PRESIDENT');
+        $stat->execute();
+        $result = $stat->get_result();
+        $row = $result->fetch_all(MYSQLI_ASSOC);
+        $direction = (new Employe())->setNoemp($row[0]["noemp"])->setNom($row[0]["nom"])->setPrenom($row[0]["prenom"]);
+        $result->free();
+        $bdd->close();
+        return $row;
+    }
+    public function deleteEmp(int $id) 
+    {
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        $bdd = new mysqli("localhost", "root", "", "employes");
+        $stat = $bdd->prepare("DELETE FROM employes WHERE noemp = ? ;");
+        $stat->bind_param("i", $id);
+        $stat->execute();
+        $bdd->close();
+    }
+    public function getSup(): array
+    {
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        $bdd = new mysqli("localhost", "root", "", "employes");
+        $stat = $bdd->prepare("SELECT DISTINCT sup FROM employes ;");
+        $stat->execute();
+        $result = $stat->get_result();
+        $row = $result->fetch_all(MYSQLI_ASSOC);
+        $result->free();
+        $bdd->close();
+        return $row;
+    }
+    public function addEmploye(
+        int $id,
+        string $nom,
+        string $prenom,
+        string $poste,
+        int $sup,
+        int $sal,
+        int $comm,
+        int $noserv
+    ) {
+        $date = date("Y/m/d");
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        $bdd = new mysqli("localhost", "root", "", "employes");
+        $stat = $bdd->prepare("INSERT INTO employes VALUES (? ,?, ? , ?  ,  ? , ? , ? , ? , ? );");
+        $stat->bind_param("isssisiii", $id, $nom, $prenom, $poste, $sup, $date, $sal, $comm, $noserv);
+        $stat->execute();
+        $bdd->close();
+    }
+}

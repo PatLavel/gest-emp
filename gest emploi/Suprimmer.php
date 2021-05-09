@@ -1,23 +1,26 @@
-<?php session_start(); 
+<?php session_start();
+include("service/EmployeService.php");
 
 if ($_SESSION['online'] == false) {
-        header('location: connection.php');
-    }
-?>
-<?php
-        // $delete = $_GET["id"];
-        // $bdd = mysqli_init();
-        // mysqli_real_connect($bdd, "localhost", "root", "", "employes");
-        // mysqli_query($bdd, "DELETE FROM employes WHERE noemp = $delete ;") ;
-        // header('location: bdd.php');
+    header('location: connection.php');
+}
 
-        function delete(){
-            $delete = $_GET["id"];
-            $bdd = mysqli_init();
-            mysqli_real_connect($bdd, "localhost", "root", "", "employes");
-            mysqli_query($bdd, "DELETE FROM employes WHERE noemp = $delete ;");
-            mysqli_close($bdd);
-            }
-        delete();
-        header('location: bdd.php');
-        ?>
+if (isset($_GET["id"])) {
+$del = new EmployeService;
+$del-> deleteEmp($_GET["id"]);
+}
+header('location: bdd.php');
+// function delete()
+// {
+//     $delete = $_GET["id"];
+//     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+//     $bdd = new mysqli("localhost", "root", "", "employes");
+
+//     $stat = $bdd->prepare("DELETE FROM employes WHERE noemp = ? ;");
+//     $stat->bind_param("i", $delete);
+//     $stat->execute();
+
+//     $bdd->close();
+// }
+// delete();
+?>
