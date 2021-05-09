@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once("DAO/EmployeDAO.php");
 
 
@@ -6,13 +6,13 @@ include_once("DAO/EmployeDAO.php");
 class EmployeService
 {
 
-    public function getEmployes() 
+    public function getEmployes()
     {
         $EmpDAO = new EmployeDAO();
         $dataemp = $EmpDAO->getEmployes();
         return $dataemp;
     }
-    public function selectEmp(int $id) : Employe
+    public function selectEmp(int $id): Employe
     {
         $EmpDAO = new EmployeDAO();
         $dataemp = $EmpDAO->selectEmp($id);
@@ -30,11 +30,10 @@ class EmployeService
         $dataemp = $EmpDAO->getDirection();
         return $dataemp;
     }
-    public function modification(string $nom, string $prenom, string $poste, int $sup, int $noserv, int $id)
+    public function modification(object $modif)
     {
         $EmpDAO = new EmployeDAO();
-        $EmpDAO->modification($nom,  $prenom,  $poste,  $sup,  $noserv,  $id);
-
+        $EmpDAO->modification($modif);
     }
 
     public function deleteEmp(int $id)
@@ -42,11 +41,11 @@ class EmployeService
         $EmpDAO = new EmployeDAO();
         $EmpDAO->deleteEmp($id);
     }
-    
-    public function addEmploye(int $id, string $nom, string $prenom, string $poste, int $sup, int $sal, int $comm, int $noserv)
+
+    public function addEmploye(object $ajout)
     {
-        
+
         $EmpDAO = new EmployeDAO();
-        $EmpDAO->addEmploye( $id,  $nom,  $prenom,  $poste,  $sup,  $sal,  $comm, $noserv);
+        $EmpDAO->addEmploye($ajout);
     }
 }

@@ -3,13 +3,11 @@ include_once(__DIR__."/../view/AfficheHTML.php");
 include_once(__DIR__."/../service/EmployeService.php");
 
 
-function AfficheDetail($id)
+function AfficheDetail($data)
 {
 
 
 
-$empserv = new EmployeService();
-$data = $empserv->selectEmp($id);
 afficherHeadHtml();
 ?>
 

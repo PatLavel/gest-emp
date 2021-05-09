@@ -3,7 +3,7 @@ include_once("modele/Employe.php");
 class EmployeDAO
 {
 
-    public function getEmployes() 
+    public function getEmployes()
     {
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $bdd = new mysqli("localhost", "root", "", "employes");
@@ -20,17 +20,17 @@ class EmployeDAO
         $bdd->close();
         return $tabEmps;
     }
-    public function modification(string $nom, string $prenom, string $poste, int $sup, int $noserv, int $id) 
+    public function modification(object $modif)
     {
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $bdd = new mysqli("localhost", "root", "", "employes");
         $stat = $bdd->prepare("UPDATE employes SET nom = ? , prenom = ? , emploi = ?  , sup = ? , noserv = ? WHERE noemp = ? ;");
-        $stat->bind_param("ssssii", $nom, $prenom, $poste, $sup, $noserv, $id);
+        $stat->bind_param("ssssii", $modif->getNom(), $modif->getPrenom(), $modif->getEmploi(), $modif->getSup(), $modif->getnoserv(), $modif->getNoemp());
         $stat->execute();
         $bdd->close();
     }
 
-    public function selectEmp(int $id) : Employe
+    public function selectEmp(int $id): Employe
     {
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $bdd = new mysqli("localhost", "root", "", "employes");
@@ -59,7 +59,7 @@ class EmployeDAO
         $bdd->close();
         return $row;
     }
-    public function deleteEmp(int $id) 
+    public function deleteEmp(int $id)
     {
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $bdd = new mysqli("localhost", "root", "", "employes");
@@ -80,22 +80,27 @@ class EmployeDAO
         $bdd->close();
         return $row;
     }
-    public function addEmploye(
-        int $id,
-        string $nom,
-        string $prenom,
-        string $poste,
-        int $sup,
-        int $sal,
-        int $comm,
-        int $noserv
-    ) {
+    public function addEmploye(object $ajout)
+    {
+        var_dump($ajout);
         $date = date("Y/m/d");
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $bdd = new mysqli("localhost", "root", "", "employes");
-        $stat = $bdd->prepare("INSERT INTO employes VALUES (? ,?, ? , ?  ,  ? , ? , ? , ? , ? );");
-        $stat->bind_param("isssisiii", $id, $nom, $prenom, $poste, $sup, $date, $sal, $comm, $noserv);
+        $stat = $bdd->prepare("INSERT INTO employes VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?);");
+        $stat->bind_param(
+            "isssisiii",
+            $ajout->getNoemp(),
+            $ajout->getNom(),
+            $ajout->getPrenom(),
+            $ajout->getEmploi(),
+            $ajout->getSup(),
+            $date,
+            $ajout->getSal(),
+            $ajout->getCom(),
+            $ajout->getNoserv()
+        );
         $stat->execute();
         $bdd->close();
+        $ajout->getNom();
     }
 }

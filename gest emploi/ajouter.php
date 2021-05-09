@@ -6,5 +6,9 @@ include("view/AfficheAjoutForm.php");
 if ($_SESSION['online'] == false) {
     header('location: connection.php');
 }
-AfficheAjoutForm();
+$empserv = new EmployeService();
+$dataemp = $empserv->getDirection();
+$servserv = new ServiceService();
+$dataserv = $servserv->getServices();
+AfficheAjoutForm($dataemp,$dataserv);
 ?>

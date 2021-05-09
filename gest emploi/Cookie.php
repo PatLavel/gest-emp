@@ -2,7 +2,6 @@
 session_start();
 include("service/UsersService.php");
 
-
 $userserv = new UsersService;
 $users = $userserv->getUsers();
 //var_dump($users);

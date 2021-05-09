@@ -5,9 +5,11 @@ include_once("view/AfficheModifForm.php");
 if ($_SESSION['online'] == false) {
     header('location: connection.php');
 }
+$Empserv = new EmployeService;
+$servserv = new ServiceService;
+$dataemp = $Empserv->selectEmp($_GET["id"]);
+$datasup = $Empserv->getDirection();
+$dataserv = $servserv->getServices();
 
-if (isset($_GET["check"])) {
-?> <td>Informations Incorectes</td>
-<?php
-}; 
-AfficheModifForm($_GET["id"]);?>
+AfficheModifForm($dataserv,$datasup,$dataemp);
+?>

@@ -5,13 +5,9 @@ include_once(__DIR__ . "/../service/UsersService.php");
 include_once(__DIR__ . "/../service/serviceService.php");
 
 
-function AfficheTableauEmp()
+function AfficheTableauEmp($dataemp,$datasup,$datausers)
 {
-    $Empserv = new EmployeService();
-    $Usersserv = new UsersService();
-    $dataemp = $Empserv->getEmployes();
-    $datasup = $Empserv->getSup();
-    $datausers = $Usersserv->getAdmin();
+    
     afficherHeadHtml();
 
 ?>

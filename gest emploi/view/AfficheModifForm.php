@@ -3,21 +3,19 @@ include_once(__DIR__ . "/../view/AfficheHTML.php");
 include_once(__DIR__ . "/../service/EmployeService.php");
 include_once(__DIR__ . "/../service/ServiceService.php");
 
-function AfficheModifForm($id)
+function AfficheModifForm($dataserv,$datasup,$dataemp)
 {
 
-    if (isset($id)) {
-        $Empserv = new EmployeService;
-        $servserv = new ServiceService;
-        $dataemp = $Empserv->selectEmp($id);
-        $datasup = $Empserv->getDirection();
-        $dataserv = $servserv->getServices();
+    if (isset($_GET["id"])) {
 
         afficherHeadHtml();
 ?>
 
         <body>
-
+            <?php if (isset($_GET["check"])) {
+            ?> <td>Informations Incorectes</td>
+            <?php
+            }; ?>
             <form action="modifaction.php" method="POST">
 
                 <input type="number" class="form-control" name="id" placeholder=" ID" value="<?php echo $dataemp->getNoemp('noemp') ?>" hidden>
@@ -32,7 +30,7 @@ function AfficheModifForm($id)
                     <?php
                     for ($i = 0; $i < sizeof($datasup); $i++) {
                     ?><option value="<?php echo $datasup[$i]['noemp']; ?>"><?php echo ($datasup[$i]['nom'] . ' ' . $datasup[$i]['prenom']); ?></option><?php
-                                                                                                                                        } ?>
+                                                                                                                                                    } ?>
                 </select>
                 <td>Votre service</td>
                 <select name="service">
@@ -40,7 +38,7 @@ function AfficheModifForm($id)
 
                     for ($i = 0; $i < sizeof($dataserv); $i++) {
                     ?><option value="<?php echo $dataserv[$i]['service']; ?>"><?php echo $dataserv[$i]['service']; ?></option><?php
-                                                                                                                } ?>
+                                                                                                                            } ?>
 
                 </select>
                 <input type="submit" class="btn btn-success" value="Soumettre">
