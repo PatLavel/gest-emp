@@ -14,7 +14,6 @@ if ((preg_match("#^[A-Z]{1,20}$#i",$_POST["user"])) && (preg_match("#^[0-9]{4,20
             $_SESSION['time'] = time();
             $_SESSION['online'] = true;
             header('location: bdd.php');
-
             break;
         }
         header ("location: connection.php?check=2>");

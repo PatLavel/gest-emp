@@ -1,12 +1,12 @@
 <?php
 include_once("modele/Employe.php");
-class EmployeDAO
+include_once("DAO/Common.php");
+class EmployeDAO extends Common
 {
 
     public function getEmployes()
     {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        $bdd = new mysqli("localhost", "root", "", "employes");
+        $bdd = parent::common();
         $stat = $bdd->prepare("SELECT * FROM employes INNER JOIN services ON employes.noserv=services.noserv;");
         $stat->execute();
         $result = $stat->get_result();
@@ -22,8 +22,8 @@ class EmployeDAO
     }
     public function modification(object $modif)
     {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        $bdd = new mysqli("localhost", "root", "", "employes");
+        
+        $bdd = parent::common();
         $stat = $bdd->prepare("UPDATE employes SET nom = ? , prenom = ? , emploi = ?  , sup = ? , noserv = ? WHERE noemp = ? ;");
         $stat->bind_param("ssssii", $modif->getNom(), $modif->getPrenom(), $modif->getEmploi(), $modif->getSup(), $modif->getnoserv(), $modif->getNoemp());
         $stat->execute();
@@ -32,8 +32,8 @@ class EmployeDAO
 
     public function selectEmp(int $id): Employe
     {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        $bdd = new mysqli("localhost", "root", "", "employes");
+        
+        $bdd = parent::common();
         $stat = $bdd->prepare("SELECT *  FROM employes WHERE noemp = ?;");
         $stat->bind_param("i", $id);
         $stat->execute();
@@ -47,8 +47,8 @@ class EmployeDAO
     }
     public function getDirection()
     {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        $bdd = new mysqli("localhost", "root", "", "employes");
+        
+        $bdd = parent::common();
         $stat = $bdd->prepare("SELECT noemp, nom, prenom FROM employes WHERE emploi = 'DIRECTEUR' OR emploi = 'PRESIDENT' ;");
         //$stat->bind_param("ss",'DIRECTEUR', 'PRESIDENT');
         $stat->execute();
@@ -61,8 +61,8 @@ class EmployeDAO
     }
     public function deleteEmp(int $id)
     {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        $bdd = new mysqli("localhost", "root", "", "employes");
+        
+        $bdd = parent::common();
         $stat = $bdd->prepare("DELETE FROM employes WHERE noemp = ? ;");
         $stat->bind_param("i", $id);
         $stat->execute();
@@ -70,8 +70,8 @@ class EmployeDAO
     }
     public function getSup(): array
     {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        $bdd = new mysqli("localhost", "root", "", "employes");
+        
+        $bdd = parent::common();
         $stat = $bdd->prepare("SELECT DISTINCT sup FROM employes ;");
         $stat->execute();
         $result = $stat->get_result();
@@ -84,8 +84,8 @@ class EmployeDAO
     {
         var_dump($ajout);
         $date = date("Y/m/d");
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        $bdd = new mysqli("localhost", "root", "", "employes");
+        
+        $bdd = parent::common();
         $stat = $bdd->prepare("INSERT INTO employes VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?);");
         $stat->bind_param(
             "isssisiii",

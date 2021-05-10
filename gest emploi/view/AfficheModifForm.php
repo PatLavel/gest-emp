@@ -9,8 +9,9 @@ function AfficheModifForm($dataserv,$datasup,$dataemp)
     if (isset($_GET["id"])) {
 
         afficherHeadHtml();
-?>
 
+
+?>
         <body>
             <?php if (isset($_GET["check"])) {
             ?> <td>Informations Incorectes</td>
