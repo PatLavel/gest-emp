@@ -1,7 +1,5 @@
 <?php
 include_once(__DIR__ . "/../view/AfficheHTML.php");
-include_once(__DIR__ . "/../service/EmployeService.php");
-include_once(__DIR__ . "/../service/ServiceService.php");
 
 function AfficheModifForm($dataserv,$datasup,$dataemp)
 {
@@ -49,6 +47,6 @@ function AfficheModifForm($dataserv,$datasup,$dataemp)
         </html>
 
 <?php  } else {
-        header("location: bdd.php");
+        header("location: Tableau.php");
     };
 }; ?>

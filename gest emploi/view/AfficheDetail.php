@@ -1,6 +1,5 @@
 <?php 
-include_once(__DIR__."/../view/AfficheHTML.php");
-include_once(__DIR__."/../service/EmployeService.php");
+include_once(__DIR__."/../view/AfficheDetail.php");
 
 
 function AfficheDetail($data)
@@ -39,7 +38,7 @@ afficherHeadHtml();
             <td><?php print_r($data->getCom()); ?></td>
             <td><?php print_r($data->getNoserv()); ?></td>
         </tr>
-        <td><?php echo "<a href='bdd.php'><button class='btn btn-warning'>retour</button></a>"; ?></td>
+        <td><?php echo "<a href='Tableau.php'><button class='btn btn-warning'>retour</button></a>"; ?></td>
 
     </table>
 </body><?php

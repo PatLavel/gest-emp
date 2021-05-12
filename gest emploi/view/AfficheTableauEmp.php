@@ -1,8 +1,5 @@
 <?php
 include_once(__DIR__ . "/../view/AfficheHTML.php");
-include_once(__DIR__ . "/../service/EmployeService.php");
-include_once(__DIR__ . "/../service/UsersService.php");
-include_once(__DIR__ . "/../service/serviceService.php");
 
 
 function AfficheTableauEmp($dataemp,$datasup,$datausers)

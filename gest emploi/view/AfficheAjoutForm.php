@@ -1,7 +1,5 @@
 <?php
 include_once(__DIR__ . "/../view/AfficheHTML.php");
-include_once(__DIR__ . "/../service/EmployeService.php");
-include_once(__DIR__ . "/../service/ServiceService.php");
 
 function AfficheAjoutForm($dataemp, $dataserv)
 {
@@ -49,7 +47,7 @@ function AfficheAjoutForm($dataemp, $dataserv)
             <input type="submit" class="btn btn-success" value="Soumettre">
 
         </form>
-        <td><?php echo "<a href='bdd.php'><button class='btn btn-success'>retour</button></a>"; ?></td>
+        <td><?php echo "<a href='Tableau.php'><button class='btn btn-success'>retour</button></a>"; ?></td>
 
     </body>
 

@@ -1,5 +1,5 @@
 <?php 
-include_once("DAO/UsersDAO.php");
+include_once(__DIR__."/../DAO/UsersDAO.php");
 
 class UsersService{
     public function getUsers()

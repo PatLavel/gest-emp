@@ -1,38 +1,62 @@
 <?php
-include_once("modele/Employe.php");
-include_once("DAO/Common.php");
+include_once(__DIR__ . "/../modele/Employe.php");
+include_once(__DIR__ . "/../DAO/Common.php");
 class EmployeDAO extends Common
 {
 
     public function getEmployes()
     {
-        $bdd = parent::common();
-        $stat = $bdd->prepare("SELECT * FROM employes INNER JOIN services ON employes.noserv=services.noserv;");
-        $stat->execute();
-        $result = $stat->get_result();
-        $row = $result->fetch_all(MYSQLI_ASSOC);
-        $tabEmps = [];
-        foreach ($row as $value) {
-            $employes = (new Employe())->setNoemp($value["noemp"])->setNom($value["nom"])->setPrenom($value["prenom"])->setEmploi($value["emploi"])->setSup($value["sup"])->setEmbauche($value["embauche"])->setSal($value["sal"])->setCom($value["comm"])->setNoserv($value["noserv"]);
-            $tabEmps[] = $employes;
+        try {
+            $bdd = parent::common();
+            $stat = $bdd->prepare("SELECT * FROM employes INNER JOIN services ON employes.noserv=services.noserv;");
+            $stat->execute();
+            $result = $stat->get_result();
+            $row = $result->fetch_all(MYSQLI_ASSOC);
+            $tabEmps = [];
+            foreach ($row as $value) {
+                $employes = (new Employe())->setNoemp($value["noemp"])->setNom($value["nom"])->setPrenom($value["prenom"])->setEmploi($value["emploi"])->setSup($value["sup"])->setEmbauche($value["embauche"])->setSal($value["sal"])->setCom($value["comm"])->setNoserv($value["noserv"]);
+                $tabEmps[] = $employes;
+            }
+            $result->free();
+            $bdd->close();
+        } catch (mysqli_sql_exception $e) {
+            if ($e->getCode() == 1064) {
+                $message = "Un problème technique est survenu. Veuillez réessayer ultérieurement.";
+            } else {
+                $message = $e->getMessage();
+            }
+            throw new EmployeDAOException($message);
         }
-        $result->free();
-        $bdd->close();
+        catch (Exception $e) {
+
+                $message = $e->getMessage();
+            
+            throw new EmployeDAOException($message);
+        }
         return $tabEmps;
     }
+
     public function modification(object $modif)
     {
-        
-        $bdd = parent::common();
-        $stat = $bdd->prepare("UPDATE employes SET nom = ? , prenom = ? , emploi = ?  , sup = ? , noserv = ? WHERE noemp = ? ;");
-        $stat->bind_param("ssssii", $modif->getNom(), $modif->getPrenom(), $modif->getEmploi(), $modif->getSup(), $modif->getnoserv(), $modif->getNoemp());
-        $stat->execute();
-        $bdd->close();
+        try {
+            $bdd = parent::common();
+            $stat = $bdd->prepare("UPDATE employes SET nom = ? , prenom = ? , emploi = ?  , sup = ? , noserv = ? WHERE noemp = ? ;");
+            $stat->bind_param("ssssii", $modif->getNom(), $modif->getPrenom(), $modif->getEmploi(), $modif->getSup(), $modif->getnoserv(), $modif->getNoemp());
+            $stat->execute();
+            $bdd->close();
+        } catch (mysqli_sql_exception $e) {
+            if ($e->getCode() == 1064) {
+                $message = "Un problème technique est survenu. Veuillez réessayer ultérieurement.";
+            } else {
+                $message = $e->getMessage();
+            }
+            throw new EmployeDAOException($message);
+        }
     }
 
     public function selectEmp(int $id): Employe
     {
-        
+        try{
         $bdd = parent::common();
         $stat = $bdd->prepare("SELECT *  FROM employes WHERE noemp = ?;");
         $stat->bind_param("i", $id);
@@ -42,12 +66,25 @@ class EmployeDAO extends Common
         $employe = (new Employe())->setNoemp($data[0]["noemp"])->setNom($data[0]["nom"])->setPrenom($data[0]["prenom"])->setEmploi($data[0]["emploi"])
             ->setSup($data[0]["sup"])->setEmbauche($data[0]["embauche"])->setSal($data[0]["sal"])->setCom($data[0]["comm"])->setNoserv($data[0]["noserv"]);
         $result->free();
-        $bdd->close();
+        $bdd->close();} catch (mysqli_sql_exception $e) {
+            if ($e->getCode() == 1064) {
+                $message = "Un problème technique est survenu. Veuillez réessayer ultérieurement.";
+            } else {
+                $message = $e->getMessage();
+            }
+            throw new EmployeDAOException($message);
+        }
+        catch (Exception $e) {
+            
+                $message = $e->getMessage();
+            
+            throw new EmployeDAOException($message);
+        }
         return $employe;
     }
     public function getDirection()
     {
-        
+
         $bdd = parent::common();
         $stat = $bdd->prepare("SELECT noemp, nom, prenom FROM employes WHERE emploi = 'DIRECTEUR' OR emploi = 'PRESIDENT' ;");
         //$stat->bind_param("ss",'DIRECTEUR', 'PRESIDENT');
@@ -61,7 +98,7 @@ class EmployeDAO extends Common
     }
     public function deleteEmp(int $id)
     {
-        
+
         $bdd = parent::common();
         $stat = $bdd->prepare("DELETE FROM employes WHERE noemp = ? ;");
         $stat->bind_param("i", $id);
@@ -70,7 +107,7 @@ class EmployeDAO extends Common
     }
     public function getSup(): array
     {
-        
+
         $bdd = parent::common();
         $stat = $bdd->prepare("SELECT DISTINCT sup FROM employes ;");
         $stat->execute();
@@ -84,7 +121,7 @@ class EmployeDAO extends Common
     {
         var_dump($ajout);
         $date = date("Y/m/d");
-        
+
         $bdd = parent::common();
         $stat = $bdd->prepare("INSERT INTO employes VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?);");
         $stat->bind_param(
